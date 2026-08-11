@@ -28,6 +28,7 @@ public class CustomerService {
     }
 
 
-
-
+    public boolean existsByEmail(String email) {
+        return customerRepository.existsByEmail(email);
+    }
 }

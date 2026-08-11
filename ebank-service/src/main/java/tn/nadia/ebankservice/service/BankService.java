@@ -25,7 +25,16 @@ public class BankService {
 
 
     public List<BankAccount> getAllBankAccounts() {
-        return banckAccountRepository.findAll();
+
+        List<BankAccount> bankAccounts = banckAccountRepository.findAll();
+
+        bankAccounts.forEach(account -> {
+            account.setCustomer(
+                    customerRestClient.getCustomerById(account.getCustomerId())
+            );
+        });
+
+        return bankAccounts;
     }
 
     public BankAccount getBankAccountById(String id) {

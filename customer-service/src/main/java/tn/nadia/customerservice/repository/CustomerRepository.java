@@ -5,4 +5,5 @@ import tn.nadia.customerservice.entities.Customer;
 
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    boolean existsByEmail(String email);
 }

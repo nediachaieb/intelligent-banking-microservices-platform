@@ -14,16 +14,21 @@ public class CustomerServiceApplication {
         SpringApplication.run(CustomerServiceApplication.class, args);
     }
     @Bean
-    public CommandLineRunner run(CustomerService customerService){
-        return (args) -> {
-            for (int i = 1; i <=5 ; i++) {
-                Customer customer=Customer.builder()
-                        .firstName("First Name "+i)
-                        .lastName("Last Name "+i)
-                        .email("f.l"+i+"@gmail.com")
-                        .phone("+2162300000"+i)
+    public CommandLineRunner run(CustomerService customerService) {
+        return args -> {
+
+            for (int i = 1; i <=10; i++) {
+
+                Customer customer = Customer.builder()
+                        .firstName("First Name " + i)
+                        .lastName("Last Name " + i)
+                        .email("f.l" + i + "@gmail.com")
+                        .phone("+2162300000" + i)
                         .build();
-                customerService.createCustomer(customer);
+
+                if (!customerService.existsByEmail(customer.getEmail())) {
+                    customerService.createCustomer(customer);
+                }
             }
         };
     }

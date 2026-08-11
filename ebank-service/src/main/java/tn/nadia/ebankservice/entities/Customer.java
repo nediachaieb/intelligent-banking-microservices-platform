@@ -1,5 +1,8 @@
 package tn.nadia.ebankservice.entities;
 
+import lombok.*;
+
+@Getter@Setter@NoArgsConstructor@AllArgsConstructor@Builder
 public class Customer {
     private Long id;
     private String firstName;
@@ -7,6 +10,4 @@ public class Customer {
     private String email;
 
 
-    public Customer(Long id, String none, String none1, String none2) {
-    }
 }

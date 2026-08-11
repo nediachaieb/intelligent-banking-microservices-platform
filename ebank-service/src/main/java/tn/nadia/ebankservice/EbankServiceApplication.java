@@ -6,8 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import tn.nadia.ebankservice.entities.BankAccount;
+import tn.nadia.ebankservice.entities.Customer;
 import tn.nadia.ebankservice.enums.AccountStatus;
 import tn.nadia.ebankservice.enums.AccountType;
+import tn.nadia.ebankservice.feign.CustomerRestClient;
 import tn.nadia.ebankservice.service.BankService;
 
 import java.sql.Date;
@@ -23,55 +25,32 @@ public class EbankServiceApplication {
 
 
     @Bean
-    CommandLineRunner start(BankService bankService) {
+    CommandLineRunner start(
+            BankService bankService,
+            CustomerRestClient customerRestClient) {
 
         return args -> {
 
-            List<BankAccount> accounts = List.of(
+            List<Customer> customers =
+                    customerRestClient.getAllCustomers();
 
-                    BankAccount.builder()
-                            .balance(1500)
-                            .currency("TND")
-                            .type(AccountType.CURRENT_ACCOUNT)
-                            .status(AccountStatus.ACTIVATED)
-                            .customerId(1L)
-                            .build(),
+            for (int i = 0; i < customers.size(); i++) {
 
-                    BankAccount.builder()
-                            .balance(3200)
-                            .currency("TND")
-                            .type(AccountType.SAVING_ACCOUNT)
-                            .status(AccountStatus.ACTIVATED)
-                            .customerId(2L)
-                            .build(),
+                Customer customer = customers.get(i);
 
-                    BankAccount.builder()
-                            .balance(800)
-                            .currency("EUR")
-                            .type(AccountType.CURRENT_ACCOUNT)
-                            .status(AccountStatus.CREATED)
-                            .customerId(3L)
-                            .build(),
+                BankAccount account = BankAccount.builder()
+                        .balance(1000 + (i * 500))
+                        .currency("TND")
+                        .type(i % 2 == 0 ? AccountType.CURRENT_ACCOUNT : AccountType.SAVING_ACCOUNT)
+                        .status(i % 2 == 0 ? AccountStatus.ACTIVATED : AccountStatus.SUSPENDED)
+                        .customerId(customer.getId())
 
-                    BankAccount.builder()
-                            .balance(4500)
-                            .currency("USD")
-                            .type(AccountType.SAVING_ACCOUNT)
-                            .status(AccountStatus.SUSPENDED)
-                            .customerId(4L)
-                            .build(),
+                        .build();
 
-                    BankAccount.builder()
-                            .balance(2100)
-                            .currency("TND")
-                            .type(AccountType.CURRENT_ACCOUNT)
-                            .status(AccountStatus.ACTIVATED)
-                            .customerId(5L)
-                            .build()
-            );
-
-            accounts.forEach(bankService::saveBankAccount);
+                bankService.saveBankAccount(account);
+            }
         };
     }
+
 }
 
