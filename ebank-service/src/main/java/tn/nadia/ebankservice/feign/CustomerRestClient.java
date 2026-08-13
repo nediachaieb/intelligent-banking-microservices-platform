@@ -11,6 +11,7 @@ import java.util.List;
 
 @FeignClient(
         name = "customer-service",
+        qualifiers = "customerFeignClient",
         fallback = CustomerRestClientFallback.class
 )
 public interface CustomerRestClient {
