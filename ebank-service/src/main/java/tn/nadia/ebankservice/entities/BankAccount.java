@@ -22,5 +22,6 @@ public class BankAccount {
     private Long customerId;
     @Transient
     private  Customer customer;
+
 }
 
