@@ -24,3 +24,23 @@ Le développement se poursuit maintenant avec la partie **Frontend sous Angular*
 
 **Backend : ✅ Terminé**
 
+## 📸 Captures du projet
+
+### Eureka Discovery Service
+
+Les différents microservices sont enregistrés auprès du serveur Eureka.
+
+![Eureka Discovery](capture/eureka.png)
+
+### Bank Service
+
+Exemple de récupération des comptes bancaires avec les informations des clients.
+
+![Bank Service](capture/Bank Service-OpenFeign.png)
+
+### Chatbot IA
+
+Interaction avec le chatbot basé sur Spring AI, MCP et Ollama.
+
+![Chatbot IA](capture/Chatbot-avec-Ollama.png)
+
