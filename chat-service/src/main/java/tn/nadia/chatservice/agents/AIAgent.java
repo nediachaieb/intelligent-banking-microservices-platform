@@ -41,6 +41,13 @@ public class AIAgent {
     }
 
 
+//    public String chat (String message) {
+//        return chatClient.prompt()
+//                .user(message)
+//                .call()
+//                .content();
+//
+//    }
     public Flux<String> ask(String message) {
         return chatClient.prompt()
                 .user(message)
@@ -48,4 +55,7 @@ public class AIAgent {
                 .content();
 
     }
+
+
+
 }

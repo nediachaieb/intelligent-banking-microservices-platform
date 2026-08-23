@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+
 import tn.nadia.ebankservice.entities.BankAccount;
 import tn.nadia.ebankservice.entities.Customer;
 import tn.nadia.ebankservice.enums.AccountStatus;
@@ -13,7 +14,6 @@ import tn.nadia.ebankservice.enums.AccountType;
 import tn.nadia.ebankservice.feign.CustomerRestClient;
 import tn.nadia.ebankservice.service.BankService;
 
-import java.sql.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -28,10 +28,12 @@ public class EbankServiceApplication {
     @Bean
     CommandLineRunner start(
             BankService bankService,
-            @Qualifier("customerFeignClient") CustomerRestClient customerRestClient) {
+            @Qualifier("customerFeignClient")
+            CustomerRestClient customerRestClient) {
 
         return args -> {
 
+            // Récupérer les clients depuis customer-service
             List<Customer> customers =
                     customerRestClient.getAllCustomers();
 
@@ -39,19 +41,55 @@ public class EbankServiceApplication {
 
                 Customer customer = customers.get(i);
 
-                BankAccount account = BankAccount.builder()
-                        .balance(1000 + (i * 500))
-                        .currency("TND")
-                        .type(i % 2 == 0 ? AccountType.CURRENT_ACCOUNT : AccountType.SAVING_ACCOUNT)
-                        .status(i % 2 == 0 ? AccountStatus.ACTIVATED : AccountStatus.SUSPENDED)
-                        .customerId(customer.getId())
 
-                        .build();
+                // =====================================================
+                // 1. COMPTE COURANT
+                // Chaque client possède un compte courant
+                // =====================================================
 
-                bankService.saveBankAccount(account);
+                if (!bankService.accountExists(
+                        customer.getId(),
+                        AccountType.CURRENT_ACCOUNT)) {
+
+                    BankAccount currentAccount =
+                            BankAccount.builder()
+                                    .balance(1500.0 + (i * 750))
+                                    .currency("TND")
+                                    .type(AccountType.CURRENT_ACCOUNT)
+                                    .status(AccountStatus.ACTIVATED)
+                                    .customerId(customer.getId())
+                                    .build();
+
+                    bankService.saveBankAccount(currentAccount);
+                }
+
+
+                // =====================================================
+                // 2. COMPTE ÉPARGNE
+                // Un client sur deux possède également un compte épargne
+                // =====================================================
+
+                if (i % 2 == 0 &&
+                        !bankService.accountExists(
+                                customer.getId(),
+                                AccountType.SAVING_ACCOUNT)) {
+
+                    BankAccount savingAccount =
+                            BankAccount.builder()
+                                    .balance(5000.0 + (i * 1250))
+                                    .currency("TND")
+                                    .type(AccountType.SAVING_ACCOUNT)
+                                    .status(
+                                            i % 4 == 0
+                                                    ? AccountStatus.ACTIVATED
+                                                    : AccountStatus.SUSPENDED
+                                    )
+                                    .customerId(customer.getId())
+                                    .build();
+
+                    bankService.saveBankAccount(savingAccount);
+                }
             }
         };
     }
-
 }
-

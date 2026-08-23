@@ -2,11 +2,17 @@ package tn.nadia.ebankservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import tn.nadia.ebankservice.entities.BankAccount;
+import tn.nadia.ebankservice.enums.AccountType;
 
 import java.util.List;
 
-public interface BanckAccountRepository extends JpaRepository<BankAccount, String> {
+public interface BanckAccountRepository extends JpaRepository<BankAccount, Long> {
 
-     BankAccount findByCustomerId(Long id);
+     List<BankAccount> findByCustomerId(Long customerId);
+
+     boolean existsByCustomerIdAndType(
+             Long customerId,
+             AccountType type
+     );
 
 }
