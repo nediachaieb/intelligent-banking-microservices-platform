@@ -9,7 +9,7 @@ import tn.nadia.ebankservice.entities.BankAccount;
 import tn.nadia.ebankservice.entities.Customer;
 import tn.nadia.ebankservice.enums.AccountType;
 import tn.nadia.ebankservice.feign.CustomerRestClient;
-import tn.nadia.ebankservice.repository.BanckAccountRepository;
+import tn.nadia.ebankservice.repository.BankAccountRepository;
 
 import java.util.Date;
 import java.util.List;
@@ -17,16 +17,16 @@ import java.util.List;
 @Service
 public class BankService {
 
-    private final BanckAccountRepository banckAccountRepository;
+    private final BankAccountRepository bankAccountRepository;
     private final CustomerRestClient customerRestClient;
 
 
     public BankService(
-            BanckAccountRepository banckAccountRepository,
+            BankAccountRepository bankAccountRepository,
             @Qualifier("customerFeignClient")
             CustomerRestClient customerRestClient) {
 
-        this.banckAccountRepository = banckAccountRepository;
+        this.bankAccountRepository = bankAccountRepository;
         this.customerRestClient = customerRestClient;
     }
 
@@ -41,7 +41,7 @@ public class BankService {
     public List<BankAccount> getAllBankAccounts() {
 
         List<BankAccount> bankAccounts =
-                banckAccountRepository.findAll();
+                bankAccountRepository.findAll();
 
         bankAccounts.forEach(account -> {
 
@@ -71,7 +71,7 @@ public class BankService {
             String id) {
 
         BankAccount bankAccount =
-                banckAccountRepository.findById(Long.valueOf(id))
+                bankAccountRepository.findById(Long.valueOf(id))
                         .orElseThrow(
                                 () -> new RuntimeException(
                                         "Bank account not found"
@@ -112,7 +112,7 @@ public class BankService {
 
         // Récupère uniquement les comptes de ce client
         List<BankAccount> accounts =
-                banckAccountRepository.findByCustomerId(customerId);
+                bankAccountRepository.findByCustomerId(customerId);
 
         // Ajoute les informations du client à chaque compte
         accounts.forEach(account -> account.setCustomer(customer));
@@ -150,7 +150,7 @@ public class BankService {
         // 2. Vérifier que ce type de compte
         // n'existe pas déjà pour ce client
         boolean accountAlreadyExists =
-                banckAccountRepository
+                bankAccountRepository
                         .existsByCustomerIdAndType(
                                 bankAccount.getCustomerId(),
                                 bankAccount.getType()
@@ -171,7 +171,7 @@ public class BankService {
 
         // 4. Sauvegarde
         BankAccount savedAccount =
-                banckAccountRepository.save(bankAccount);
+                bankAccountRepository.save(bankAccount);
 
 
         // 5. Ajouter les informations du client
@@ -189,7 +189,7 @@ public class BankService {
             Long customerId,
             AccountType type) {
 
-        return banckAccountRepository
+        return bankAccountRepository
                 .existsByCustomerIdAndType(
                         customerId,
                         type

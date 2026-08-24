@@ -6,7 +6,7 @@ import tn.nadia.ebankservice.enums.AccountType;
 
 import java.util.List;
 
-public interface BanckAccountRepository extends JpaRepository<BankAccount, Long> {
+public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
 
      List<BankAccount> findByCustomerId(Long customerId);
 
