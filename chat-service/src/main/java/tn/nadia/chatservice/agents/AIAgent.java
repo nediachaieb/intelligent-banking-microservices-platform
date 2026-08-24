@@ -41,20 +41,14 @@ public class AIAgent {
     }
 
 
-//    public String chat (String message) {
-//        return chatClient.prompt()
-//                .user(message)
-//                .call()
-//                .content();
-//
-//    }
-    public Flux<String> ask(String message) {
-        return chatClient.prompt()
-                .user(message)
+    public Flux<String> ask(String query) {
+        return chatClient
+                .prompt()
+                .user(query)
                 .stream()
                 .content();
-
     }
+
 
 
 

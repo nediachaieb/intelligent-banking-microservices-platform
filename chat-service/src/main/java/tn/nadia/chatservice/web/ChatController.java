@@ -19,16 +19,16 @@ public class ChatController {
         this.aiAgent = aiAgent;
     }
 
-//    @GetMapping(value = "/chat" ,produces = MediaType.TEXT_PLAIN_VALUE)
-//    public String chat(@RequestParam String query) {
-//        return aiAgent.ask(query);
-//
-//    }
-    @GetMapping(value = "/chat" ,produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(
+            value = "/chat",
+            produces = MediaType.TEXT_PLAIN_VALUE
+    )
     public Flux<String> chat(@RequestParam String query) {
         return aiAgent.ask(query);
-
     }
+
+
+
 
 
 }

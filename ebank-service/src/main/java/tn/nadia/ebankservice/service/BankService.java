@@ -88,36 +88,34 @@ public class BankService {
         return bankAccount;
     }
 
-
-    // =====================================================
-    // GET ALL ACCOUNTS OF ONE CUSTOMER
-    // =====================================================
-
+    // ==============================================
+// GET ALL ACCOUNTS OF ONE CUSTOMER
+// ==============================================
     @McpTool(
-            description = "get all bank accounts of a customer"
+            description = """
+             
+                Use this tool when the user asks for the bank accounts
+                of one customer using a customer id.
+              
+                """
     )
     public List<BankAccount> getAccountsByCustomerId(
+
             @McpToolParam(
-                    description = "the customer id"
+                    description = "The unique customer id used to retrieve only this customer's bank accounts"
             )
-            Long customerId) {
+            Long customerId
+    ) {
 
-        // Vérifie d'abord que le client existe
-        customerRestClient.getCustomerById(customerId);
+        // Vérifie que le client existe
+        Customer customer = customerRestClient.getCustomerById(customerId);
 
+        // Récupère uniquement les comptes de ce client
         List<BankAccount> accounts =
-                banckAccountRepository
-                        .findByCustomerId(customerId);
+                banckAccountRepository.findByCustomerId(customerId);
 
-        accounts.forEach(account -> {
-
-            Customer customer =
-                    customerRestClient.getCustomerById(
-                            account.getCustomerId()
-                    );
-
-            account.setCustomer(customer);
-        });
+        // Ajoute les informations du client à chaque compte
+        accounts.forEach(account -> account.setCustomer(customer));
 
         return accounts;
     }
