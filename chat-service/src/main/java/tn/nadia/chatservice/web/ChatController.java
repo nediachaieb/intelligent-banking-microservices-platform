@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import tn.nadia.chatservice.agents.AIAgent;
 
-import java.awt.*;
-
 @RestController
 public class ChatController {
 
@@ -19,15 +17,24 @@ public class ChatController {
         this.aiAgent = aiAgent;
     }
 
+//    @GetMapping(
+//            value = "/chat",
+//            produces = MediaType.TEXT_PLAIN_VALUE
+//    )
+//    public String chat(@RequestParam String query) {
+//        return aiAgent.ask(query);
+//    }
+
     @GetMapping(
             value = "/chat",
-            produces = MediaType.TEXT_PLAIN_VALUE
+            produces = MediaType.TEXT_EVENT_STREAM_VALUE
     )
-    public Flux<String> chat(@RequestParam String query) {
+    public Flux<String> chat(
+            @RequestParam String query
+    ) {
+
         return aiAgent.ask(query);
     }
-
-
 
 
 
