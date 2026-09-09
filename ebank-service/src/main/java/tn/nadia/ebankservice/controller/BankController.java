@@ -20,7 +20,7 @@ public class BankController {
         return bankService.getAllBankAccounts();
     }
 @GetMapping("/bankAccounts/{id}")
-    public BankAccount getBankAccountById( @PathVariable String id) {
+    public BankAccount getBankAccountById( @PathVariable Long id) {
         return bankService.getBankAccountById(id);
 
     }

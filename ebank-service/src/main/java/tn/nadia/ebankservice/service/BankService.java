@@ -68,7 +68,7 @@ public class BankService {
             @McpToolParam(
                     description = "the bank account id"
             )
-            String id) {
+            Long id) {
 
         BankAccount bankAccount =
                 bankAccountRepository.findById(Long.valueOf(id))
